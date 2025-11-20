@@ -19,8 +19,9 @@ function App() {
   const [flow, setFlow] = useState(storageService.getFlow());
 
   // -- Refs --
-  const idleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const screensaverIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Using 'any' for timer refs to avoid DOM vs Node.js type conflicts in mixed environments
+  const idleTimeoutRef = useRef<any>(null);
+  const screensaverIntervalRef = useRef<any>(null);
 
   // -- Interaction Handlers --
   const resetIdleTimer = () => {
@@ -174,9 +175,18 @@ function App() {
                {renderScreensaverContent()}
                {/* Bottom info bar */}
                <div className="absolute bottom-0 w-full bg-slate-900/90 border-t border-slate-800 p-4 flex justify-between items-center text-slate-500 text-sm">
-                 <marquee className="w-full">
-                    Selamat Datang di Laboratorium Pemodelan Sistem & Simulasi. Silakan sentuh layar untuk informasi lebih lanjut. Jam Buka: {LAB_INFO.openHours}.
-                 </marquee>
+                 {/* Fix: Replaced deprecated marquee with CSS animation */}
+                 <div className="w-full overflow-hidden whitespace-nowrap">
+                   <style>{`
+                     @keyframes marquee {
+                       0% { transform: translateX(100%); }
+                       100% { transform: translateX(-100%); }
+                     }
+                   `}</style>
+                   <div style={{ animation: 'marquee 25s linear infinite', display: 'inline-block' }}>
+                      Selamat Datang di Laboratorium Pemodelan Sistem & Simulasi. Silakan sentuh layar untuk informasi lebih lanjut. Jam Buka: {LAB_INFO.openHours}.
+                   </div>
+                 </div>
                </div>
              </div>
           )}
