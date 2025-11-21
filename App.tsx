@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Clock } from './components/Clock';
 import { storageService } from './services/storageService';
-import { ActivitiesSection, ProductsSection, FlowSection, FacilitiesSection, AISection } from './components/Sections';
+import { ActivitiesSection, ProductsSection, FlowSection, FacilitiesSection, AISection, DelSimSection } from './components/Sections';
 import { AdminPanel } from './components/AdminPanel';
 import { AppMode, Section } from './types';
 import { LAB_INFO } from './constants';
@@ -86,26 +86,28 @@ function App() {
     // Cycle between Intro/Clock, Recent Activities, and Facility Status
     if (screensaverIndex === 0) {
       return (
-        <div className="h-full flex flex-col items-center justify-center animate-fade-in">
-          <div className="mb-12 text-center">
-            <h1 className="text-5xl font-black text-white mb-4 tracking-tight">{LAB_INFO.name}</h1>
-            <p className="text-xl text-slate-400 tracking-widest uppercase">Department of Industrial Engineering</p>
+        <div className="h-full flex flex-col items-center justify-center animate-fade-in px-8">
+          <div className="mb-24 text-center">
+            <h1 className="text-7xl font-black text-white mb-6 tracking-tight">{LAB_INFO.name}</h1>
+            <p className="text-3xl text-slate-400 tracking-[0.2em] uppercase font-light">Department of Industrial Engineering</p>
           </div>
           <Clock variant="large" />
-          <div className="mt-24 text-center">
-            <p className="text-neon-blue animate-pulse font-mono">Tap Screen to Interact</p>
+          <div className="mt-32 text-center">
+            <p className="text-3xl text-neon-blue animate-pulse font-mono bg-neon-blue/10 px-8 py-4 rounded-full inline-block">
+              Touch Screen to Interact
+            </p>
           </div>
         </div>
       );
     } else if (screensaverIndex === 1) {
       return (
-        <div className="p-8 h-full flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-slate-400 mb-8 uppercase tracking-widest">Upcoming Activities</h2>
-          <div className="space-y-6">
+        <div className="p-12 h-full flex flex-col justify-center">
+          <h2 className="text-5xl font-bold text-slate-400 mb-12 uppercase tracking-widest border-b border-slate-700 pb-4">Upcoming Activities</h2>
+          <div className="space-y-8">
             {activities.slice(0, 3).map(a => (
-              <div key={a.id} className="bg-slate-800/50 border-l-4 border-neon-blue p-6 rounded-r-xl">
-                <div className="text-2xl font-bold text-white">{a.title}</div>
-                <div className="text-lg text-slate-300 mt-1">{a.date} | {a.time}</div>
+              <div key={a.id} className="bg-slate-800/50 border-l-8 border-neon-blue p-10 rounded-r-3xl shadow-2xl">
+                <div className="text-5xl font-bold text-white mb-2">{a.title}</div>
+                <div className="text-3xl text-slate-300 mt-2 font-mono">{a.date} | {a.time}</div>
               </div>
             ))}
           </div>
@@ -113,13 +115,13 @@ function App() {
       );
     } else {
        return (
-        <div className="p-8 h-full flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-slate-400 mb-8 uppercase tracking-widest">Facility Status</h2>
-           <div className="grid grid-cols-1 gap-6">
-             {facilities.slice(0, 5).map(f => (
-               <div key={f.id} className="flex justify-between items-center bg-slate-800/80 p-6 rounded-xl">
-                 <span className="text-xl font-bold text-white">{f.name}</span>
-                 <span className={`px-4 py-1 rounded-full font-bold uppercase text-sm
+        <div className="p-12 h-full flex flex-col justify-center">
+          <h2 className="text-5xl font-bold text-slate-400 mb-12 uppercase tracking-widest border-b border-slate-700 pb-4">Facility Status</h2>
+           <div className="grid grid-cols-1 gap-8">
+             {facilities.slice(0, 6).map(f => (
+               <div key={f.id} className="flex justify-between items-center bg-slate-800/80 p-8 rounded-3xl border border-slate-700 shadow-lg">
+                 <span className="text-4xl font-bold text-white">{f.name}</span>
+                 <span className={`px-6 py-3 rounded-xl font-bold uppercase text-2xl tracking-wider
                    ${f.status === 'available' ? 'bg-green-500 text-slate-900' : 
                      f.status === 'occupied' ? 'bg-red-500 text-white' : 'bg-yellow-500 text-slate-900'}`}>
                    {f.status}
@@ -136,32 +138,32 @@ function App() {
   const MenuButton: React.FC<{ label: string; icon: string; section: Section }> = ({ label, icon, section }) => (
     <button 
       onClick={() => setActiveSection(section)}
-      className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200
+      className={`flex flex-col items-center justify-center h-full flex-1 rounded-2xl transition-all duration-200 mx-1
         ${activeSection === section 
-          ? 'bg-neon-blue/20 border-neon-blue text-neon-blue shadow-[0_0_15px_rgba(0,243,255,0.2)]' 
-          : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white'}`}
+          ? 'bg-neon-blue/20 border-2 border-neon-blue text-neon-blue shadow-[0_0_30px_rgba(0,243,255,0.3)] scale-105 -translate-y-2' 
+          : 'bg-slate-800/50 border border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white'}`}
     >
-      <span className="text-2xl mb-2">{icon}</span>
-      <span className="font-bold text-sm uppercase tracking-wide">{label}</span>
+      <span className="text-4xl mb-2 filter drop-shadow-md">{icon}</span>
+      <span className="font-bold text-sm uppercase tracking-widest text-center leading-tight">{label}</span>
     </button>
   );
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-slate-950 text-white select-none">
+    <div className="w-screen h-screen overflow-hidden bg-slate-950 text-white select-none font-sans">
       {/* BACKGROUND ELEMENTS */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[40%] bg-blue-900/20 blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[40%] bg-purple-900/20 blur-[100px] rounded-full" />
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[40%] bg-blue-900/20 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] bg-purple-900/20 blur-[120px] rounded-full" />
       </div>
 
       {/* CONTENT CONTAINER */}
       <div className="relative z-10 h-full flex flex-col">
         
-        {/* HEADER */}
-        <header className="h-24 flex items-center justify-between px-8 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
+        {/* HEADER - Taller for 4K */}
+        <header className="h-32 flex items-center justify-between px-10 border-b-2 border-slate-800 bg-slate-950/90 backdrop-blur-xl shadow-2xl z-50">
           <div className="flex flex-col">
-            <span className="font-bold text-xl text-white tracking-tight">SIMLAB</span>
-            <span className="text-xs text-slate-400">Modeling & Simulation</span>
+            <span className="font-black text-3xl text-white tracking-tight leading-none">SIMLAB</span>
+            <span className="text-lg text-neon-blue tracking-widest font-light">Modeling & Simulation</span>
           </div>
           <Clock />
         </header>
@@ -171,20 +173,22 @@ function App() {
           
           {/* MODE: SCREENSAVER */}
           {mode === AppMode.SCREENSAVER && (
-             <div className="absolute inset-0 bg-slate-900 z-20">
-               {renderScreensaverContent()}
-               {/* Bottom info bar */}
-               <div className="absolute bottom-0 w-full bg-slate-900/90 border-t border-slate-800 p-4 flex justify-between items-center text-slate-500 text-sm">
+             <div className="absolute inset-0 bg-slate-900 z-40 flex flex-col">
+               <div className="flex-1 relative">
+                 {renderScreensaverContent()}
+               </div>
+               {/* Bottom info bar - Taller for 4K */}
+               <div className="h-24 bg-slate-900/95 border-t-2 border-slate-800 flex items-center z-50">
                  {/* Fix: Replaced deprecated marquee with CSS animation */}
-                 <div className="w-full overflow-hidden whitespace-nowrap">
+                 <div className="w-full overflow-hidden whitespace-nowrap text-3xl text-slate-300 font-light tracking-wide">
                    <style>{`
                      @keyframes marquee {
                        0% { transform: translateX(100%); }
                        100% { transform: translateX(-100%); }
                      }
                    `}</style>
-                   <div style={{ animation: 'marquee 25s linear infinite', display: 'inline-block' }}>
-                      Selamat Datang di Laboratorium Pemodelan Sistem & Simulasi. Silakan sentuh layar untuk informasi lebih lanjut. Jam Buka: {LAB_INFO.openHours}.
+                   <div style={{ animation: 'marquee 30s linear infinite', display: 'inline-block' }}>
+                      Selamat Datang di Laboratorium Pemodelan Sistem & Simulasi. Sentuh layar untuk informasi. Jam Buka: {LAB_INFO.openHours}. Hubungi Koordinator: {LAB_INFO.coordinator}.
                    </div>
                  </div>
                </div>
@@ -194,35 +198,61 @@ function App() {
           {/* MODE: INTERACTIVE */}
           <div className={`h-full flex flex-col ${mode === AppMode.SCREENSAVER ? 'opacity-0' : 'opacity-100'} transition-opacity duration-500`}>
              
-             {/* Navigation Grid (Top 1/3 or Side?) - Let's do Side + Main Content for Portrait */}
-             {/* Design Choice: Bottom Nav is better for large portrait displays, reachable. */}
-             
-             <div className="flex-1 overflow-y-auto pb-32">
+             {/* Main Content Area - adjusted padding for bottom nav overlap */}
+             <div className="flex-1 overflow-y-auto pb-48 pt-6">
                 {activeSection === Section.HOME && (
-                  <div className="p-8 grid grid-cols-2 gap-6 h-full content-center">
-                    {/* Dashboard Home Tiles */}
-                    <button onClick={() => setActiveSection(Section.ACTIVITIES)} className="h-48 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 p-6 flex flex-col justify-end hover:border-neon-blue transition group">
-                      <span className="text-4xl mb-4 group-hover:scale-110 transition">📅</span>
-                      <span className="text-2xl font-bold text-white">Jadwal Kegiatan</span>
-                    </button>
-                    <button onClick={() => setActiveSection(Section.PRODUCTS)} className="h-48 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 p-6 flex flex-col justify-end hover:border-neon-blue transition group">
-                      <span className="text-4xl mb-4 group-hover:scale-110 transition">🚀</span>
-                      <span className="text-2xl font-bold text-white">Produk Lab</span>
-                    </button>
-                    <button onClick={() => setActiveSection(Section.FLOW)} className="h-48 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 p-6 flex flex-col justify-end hover:border-neon-blue transition group">
-                      <span className="text-4xl mb-4 group-hover:scale-110 transition">🔄</span>
-                      <span className="text-2xl font-bold text-white">Alur Lab</span>
-                    </button>
-                    <button onClick={() => setActiveSection(Section.FACILITIES)} className="h-48 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 p-6 flex flex-col justify-end hover:border-neon-blue transition group">
-                      <span className="text-4xl mb-4 group-hover:scale-110 transition">🖥️</span>
-                      <span className="text-2xl font-bold text-white">Sarana</span>
-                    </button>
-                    <button onClick={() => setActiveSection(Section.AI_ASSISTANT)} className="col-span-2 h-40 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-2xl border border-blue-500/30 p-6 flex items-center justify-between hover:border-neon-blue transition group relative overflow-hidden">
-                      <div className="relative z-10">
-                        <div className="text-2xl font-bold text-white mb-1">Tanya AI Assistant</div>
-                        <div className="text-slate-300">Informasi instan powered by Gemini</div>
+                  <div className="p-8 grid grid-cols-2 grid-rows-3 gap-8 h-full content-start">
+                    {/* Dashboard Home Tiles - Adjusted to 2 cols x 3 rows grid */}
+                    
+                    {/* Row 1 */}
+                    <button onClick={() => setActiveSection(Section.ACTIVITIES)} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border-2 border-slate-700 p-8 flex flex-col justify-between hover:border-neon-blue transition group shadow-xl">
+                      <div className="flex justify-end"><span className="text-7xl group-hover:scale-110 transition drop-shadow-lg">📅</span></div>
+                      <div className="text-left">
+                         <span className="text-4xl font-black text-white block mb-2">Jadwal</span>
+                         <span className="text-xl text-slate-400">Lihat Agenda</span>
                       </div>
-                      <span className="text-5xl group-hover:rotate-12 transition">🤖</span>
+                    </button>
+                    
+                    <button onClick={() => setActiveSection(Section.PRODUCTS)} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border-2 border-slate-700 p-8 flex flex-col justify-between hover:border-neon-blue transition group shadow-xl">
+                      <div className="flex justify-end"><span className="text-7xl group-hover:scale-110 transition drop-shadow-lg">🚀</span></div>
+                      <div className="text-left">
+                         <span className="text-4xl font-black text-white block mb-2">Produk</span>
+                         <span className="text-xl text-slate-400">Hasil Riset</span>
+                      </div>
+                    </button>
+
+                    {/* Row 2 */}
+                    <button onClick={() => setActiveSection(Section.FLOW)} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border-2 border-slate-700 p-8 flex flex-col justify-between hover:border-neon-blue transition group shadow-xl">
+                      <div className="flex justify-end"><span className="text-7xl group-hover:scale-110 transition drop-shadow-lg">🔄</span></div>
+                      <div className="text-left">
+                         <span className="text-4xl font-black text-white block mb-2">Alur</span>
+                         <span className="text-xl text-slate-400">SOP Lab</span>
+                      </div>
+                    </button>
+
+                    <button onClick={() => setActiveSection(Section.FACILITIES)} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl border-2 border-slate-700 p-8 flex flex-col justify-between hover:border-neon-blue transition group shadow-xl">
+                      <div className="flex justify-end"><span className="text-7xl group-hover:scale-110 transition drop-shadow-lg">🖥️</span></div>
+                      <div className="text-left">
+                         <span className="text-4xl font-black text-white block mb-2">Sarana</span>
+                         <span className="text-xl text-slate-400">Cek Alat</span>
+                      </div>
+                    </button>
+
+                    {/* Row 3 */}
+                    <button onClick={() => setActiveSection(Section.DELSIM)} className="bg-gradient-to-br from-blue-900/40 to-slate-900 rounded-3xl border-2 border-slate-700 p-8 flex flex-col justify-between hover:border-neon-blue transition group shadow-xl">
+                      <div className="flex justify-end"><span className="text-7xl group-hover:scale-110 transition drop-shadow-lg">🌐</span></div>
+                      <div className="text-left">
+                         <span className="text-4xl font-black text-white block mb-2">Info UII</span>
+                         <span className="text-xl text-slate-400">Web Update</span>
+                      </div>
+                    </button>
+
+                    <button onClick={() => setActiveSection(Section.AI_ASSISTANT)} className="bg-gradient-to-br from-purple-900/40 to-slate-900 rounded-3xl border-2 border-slate-700 p-8 flex flex-col justify-between hover:border-neon-blue transition group shadow-xl">
+                      <div className="flex justify-end"><span className="text-7xl group-hover:scale-110 transition drop-shadow-lg">🤖</span></div>
+                      <div className="text-left">
+                         <span className="text-4xl font-black text-white block mb-2">AI Chat</span>
+                         <span className="text-xl text-slate-400">Tanya Asisten</span>
+                      </div>
                     </button>
                   </div>
                 )}
@@ -231,16 +261,18 @@ function App() {
                 {activeSection === Section.PRODUCTS && <ProductsSection products={products} />}
                 {activeSection === Section.FLOW && <FlowSection flow={flow} />}
                 {activeSection === Section.FACILITIES && <FacilitiesSection facilities={facilities} />}
+                {activeSection === Section.DELSIM && <DelSimSection />}
                 {activeSection === Section.AI_ASSISTANT && <AISection />}
              </div>
 
-             {/* Bottom Navigation Dock */}
-             <div className="absolute bottom-0 left-0 right-0 h-28 bg-slate-900/90 border-t border-slate-800 backdrop-blur-lg px-4 py-2 flex justify-around items-center z-50">
+             {/* Bottom Navigation Dock - Much Taller for Easy Touch */}
+             <div className="absolute bottom-0 left-0 right-0 h-40 bg-slate-900/95 border-t-2 border-slate-800 backdrop-blur-xl px-4 py-4 flex justify-around items-center z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
                 <MenuButton label="Home" icon="🏠" section={Section.HOME} />
                 <MenuButton label="Jadwal" icon="📅" section={Section.ACTIVITIES} />
                 <MenuButton label="Produk" icon="🚀" section={Section.PRODUCTS} />
                 <MenuButton label="Alur" icon="🔄" section={Section.FLOW} />
                 <MenuButton label="Sarana" icon="🖥️" section={Section.FACILITIES} />
+                <MenuButton label="Info Web" icon="🌐" section={Section.DELSIM} />
              </div>
           </div>
 
@@ -249,7 +281,7 @@ function App() {
 
       {/* Admin Trigger (Hidden Corner) */}
       <div 
-        className="absolute bottom-0 right-0 w-20 h-20 z-[100]"
+        className="absolute bottom-0 right-0 w-32 h-32 z-[100]"
         onDoubleClick={() => setMode(AppMode.ADMIN)}
         title="Double tap for Admin"
       />

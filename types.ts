@@ -42,5 +42,6 @@ export enum Section {
   PRODUCTS = 'PRODUCTS',
   FLOW = 'FLOW',
   FACILITIES = 'FACILITIES',
+  DELSIM = 'DELSIM',
   AI_ASSISTANT = 'AI_ASSISTANT'
 }

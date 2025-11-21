@@ -5,6 +5,8 @@ import { storageService } from "./storageService";
 // Initialize Gemini with API Key from environment
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+// Use Pro model for Search Grounding capabilities if needed, but Flash is faster for general queries.
+// However, for specific URL grounding, we ensure we use a model capable of tool use.
 const MODEL_NAME = "gemini-2.5-flash";
 
 export const askLabAssistant = async (userQuery: string): Promise<string> => {
@@ -50,5 +52,35 @@ export const askLabAssistant = async (userQuery: string): Promise<string> => {
   } catch (error) {
     console.error("Gemini API Error:", error);
     return "Sistem AI sedang offline. Harap hubungi admin lab.";
+  }
+};
+
+export const getDelSimUpdates = async (): Promise<string> => {
+  try {
+    const prompt = `
+      Access and read the website https://industrial.uii.ac.id/laboratorium/delsim/.
+      Provide a structured summary for a digital signage display containing:
+      1. What is the DelSim Laboratory (Profile).
+      2. What are the key research focus areas.
+      3. Any recent news, announcements, or practicum info mentioned on the page.
+      
+      Format the output with clean Markdown headings (##) and bullet points. 
+      Keep it engaging and informative for students.
+      Use Bahasa Indonesia.
+    `;
+
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: prompt,
+      config: {
+        tools: [{googleSearch: {}}], // Enable Grounding
+      },
+    });
+
+    // Check for grounding chunks if needed, but .text usually contains the synthesized answer
+    return response.text || "Gagal mengambil data dari website DelSim. Silakan cek koneksi internet.";
+  } catch (error) {
+    console.error("Gemini Search Error:", error);
+    return "Sedang tidak dapat terhubung ke website UII. Silakan pindai QR Code untuk info manual.";
   }
 };

@@ -14,10 +14,11 @@ export const Clock: React.FC<{ variant?: 'small' | 'large' }> = ({ variant = 'sm
   if (variant === 'large') {
     return (
       <div className="flex flex-col items-center justify-center text-white">
-        <div className="text-9xl font-bold font-mono tracking-tighter text-neon-blue drop-shadow-[0_0_15px_rgba(0,243,255,0.5)]">
+        {/* Massive Font for Screensaver */}
+        <div className="text-[12rem] leading-none font-bold font-mono tracking-tighter text-neon-blue drop-shadow-[0_0_30px_rgba(0,243,255,0.5)]">
           {timeStr}
         </div>
-        <div className="text-2xl font-light text-lab-100 mt-2 tracking-widest uppercase">
+        <div className="text-4xl font-light text-lab-100 mt-6 tracking-[0.2em] uppercase border-t border-lab-500/30 pt-4">
           {dateStr}
         </div>
       </div>
@@ -26,8 +27,8 @@ export const Clock: React.FC<{ variant?: 'small' | 'large' }> = ({ variant = 'sm
 
   return (
     <div className="text-right">
-      <div className="text-4xl font-bold font-mono text-white">{timeStr}</div>
-      <div className="text-sm text-lab-200">{dateStr}</div>
+      <div className="text-5xl font-bold font-mono text-white drop-shadow-md">{timeStr}</div>
+      <div className="text-xl text-lab-200 font-medium mt-1">{dateStr}</div>
     </div>
   );
 };
